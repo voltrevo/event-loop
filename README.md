@@ -41,7 +41,7 @@ el.runNext(); // a
 
 `.run()` will run all tasks that it can possibly see, which includes tasks that get added during `.run()`. It doesn't just run the tasks that have been posted before the call.
 
-```
+```js
 el.post(function() {
   el.post(function() {
     console.log('a');
