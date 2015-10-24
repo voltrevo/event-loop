@@ -39,6 +39,28 @@ el.runNext(); // a
 // Or use el.run() to keep running until no events are left.
 ```
 
+`.run()` will run all tasks that it can possibly see, which includes tasks that get added during `.run()`. It doesn't just run the tasks that have been posted before the call.
+
+```
+el.post(function() {
+  el.post(function() {
+    console.log('a');
+  });
+});
+
+el.post(function() {
+  console.log('b');
+});
+
+el.post(function() {
+  console.log('c');
+});
+
+// No output yet
+
+el.run(); // b, c, a
+```
+
 ## License
 
 MIT © [Andrew Morris](https://andrewmorris.io/)
