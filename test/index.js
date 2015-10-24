@@ -54,4 +54,24 @@ describe('EventLoop', function() {
     x.eventLoop.runNext();
     assert.deepEqual(x.tasks.completed, ['a', 'b', 'c']);
   });
+
+  it('runs all tasks and tasks within tasks in the correct order', function() {
+    var x = Fixture();
+
+    x.eventLoop.post(x.tasks.create('a'));
+
+    x.eventLoop.post(function() {
+      x.eventLoop.post(x.tasks.create('b'));
+    });
+
+    x.eventLoop.post(x.tasks.create('c'));
+
+    x.eventLoop.post(function() {
+      x.eventLoop.post(x.tasks.create('d'));
+    });
+
+    assert.deepEqual(x.tasks.completed, []);
+    x.eventLoop.run();
+    assert.deepEqual(x.tasks.completed, ['a', 'c', 'b', 'd']);
+  });
 });
