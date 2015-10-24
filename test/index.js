@@ -74,4 +74,16 @@ describe('EventLoop', function() {
     x.eventLoop.run();
     assert.deepEqual(x.tasks.completed, ['a', 'c', 'b', 'd']);
   });
+
+  it('runs tasks according to time', function() {
+    var x = Fixture();
+
+    x.eventLoop.post(x.tasks.create('a'), 2);
+    x.eventLoop.post(x.tasks.create('b'), 1);
+    x.eventLoop.post(x.tasks.create('c'), 0);
+
+    x.eventLoop.run();
+
+    assert.deepEqual(x.tasks.completed, ['c', 'b', 'a']);
+  });
 });
