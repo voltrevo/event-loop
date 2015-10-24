@@ -1,10 +1,25 @@
 'use strict';
 
-var assert = require('assert');
-var voltrevoEventLoop = require('../lib');
+/* global describe it */
 
-describe('voltrevo-event-loop', function () {
-  it('should have unit test!', function () {
-    assert(false, 'we expected this package author to add actual unit tests.');
+// core modules
+var assert = require('assert');
+
+// local modules
+var EventLoop = require('../lib');
+
+describe('EventLoop', function() {
+  it('Can run a single task', function() {
+    var el = EventLoop();
+
+    var count = 0;
+
+    el.post(function() {
+      ++count;
+    });
+
+    el.run();
+
+    assert(count === 1);
   });
 });
