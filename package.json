@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "description": "An event loop abstraction.",
   "homepage": "",
-  "repository": "voltrevo/voltrevo-event-loop",
+  "repository": "voltrevo/event-loop",
   "author": {
     "name": "Andrew Morris",
     "email": "voltrevo@gmail.com",
