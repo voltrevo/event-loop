@@ -8,40 +8,50 @@ var assert = require('assert');
 // local modules
 var EventLoop = require('../lib');
 
+var Tasks = function() {
+  var tasks = {};
+
+  tasks.completed = [];
+
+  tasks.create = function(id) {
+    return tasks.completed.push.bind(tasks.completed, id);
+  };
+
+  return tasks;
+};
+
+var Fixture = function() {
+  var x = {};
+
+  x.eventLoop = EventLoop();
+  x.tasks = Tasks();
+
+  return x;
+};
+
 describe('EventLoop', function() {
   it('Can run a single task', function() {
-    var el = EventLoop();
+    var x = Fixture();
 
-    var count = 0;
+    x.eventLoop.post(x.tasks.create('foo'));
+    x.eventLoop.run();
 
-    el.post(function() {
-      ++count;
-    });
-
-    el.run();
-
-    assert(count === 1);
+    assert.deepEqual(x.tasks.completed, ['foo']);
   });
 
   it('runNext runs the next task', function() {
-    var el = EventLoop();
+    var x = Fixture();
 
-    var tasksCompleted = [];
+    x.eventLoop.post(x.tasks.create('a'));
+    x.eventLoop.post(x.tasks.create('b'));
+    x.eventLoop.post(x.tasks.create('c'));
 
-    var Task = function(str) {
-      return tasksCompleted.push.bind(tasksCompleted, str);
-    };
-
-    el.post(Task('a'));
-    el.post(Task('b'));
-    el.post(Task('c'));
-
-    assert.deepEqual(tasksCompleted, []);
-    el.runNext();
-    assert.deepEqual(tasksCompleted, ['a']);
-    el.runNext();
-    assert.deepEqual(tasksCompleted, ['a', 'b']);
-    el.runNext();
-    assert.deepEqual(tasksCompleted, ['a', 'b', 'c']);
+    assert.deepEqual(x.tasks.completed, []);
+    x.eventLoop.runNext();
+    assert.deepEqual(x.tasks.completed, ['a']);
+    x.eventLoop.runNext();
+    assert.deepEqual(x.tasks.completed, ['a', 'b']);
+    x.eventLoop.runNext();
+    assert.deepEqual(x.tasks.completed, ['a', 'b', 'c']);
   });
 });
