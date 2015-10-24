@@ -1,6 +1,6 @@
 {
   "name": "voltrevo-event-loop",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "An event loop abstraction.",
   "homepage": "",
   "repository": "voltrevo/voltrevo-event-loop",
