@@ -11,10 +11,32 @@ $ npm install --save voltrevo-event-loop
 
 ## Usage
 
-```js
-var voltrevoEventLoop = require('voltrevo-event-loop');
+At the moment, this package basically implements `setTimeout` without using the global event loop. Control is given to you in the form of `.run()` and `.runNext()`.
 
-voltrevoEventLoop('Rainbow');
+```js
+var EventLoop = require('voltrevo-event-loop');
+
+var el = EventLoop();
+
+el.post(function() {
+  console.log('a');
+}, 100);
+
+el.post(function() {
+  console.log('b');
+});
+
+el.post(function() {
+  console.log('c');
+});
+
+// No output yet
+
+el.runNext(); // b
+el.runNext(); // c
+el.runNext(); // a
+
+// Or use el.run() to keep running until no events are left.
 ```
 
 ## License
